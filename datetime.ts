@@ -1,3 +1,5 @@
+import { SR } from './sr';
+
 export class TimeSpan {
     public static readonly Zero = new TimeSpan(0);
     public static readonly MaxValue = new TimeSpan(Number.MAX_SAFE_INTEGER);
@@ -76,7 +78,7 @@ export class TimeSpan {
                 milliseconds = int(args[4] || 0);
                 const num = (days * 3600 * 24 + hours * 3600 + minutes * 60 + seconds) * 1000 + milliseconds;
                 if (num > Number.MAX_SAFE_INTEGER || num < Number.MIN_SAFE_INTEGER) {
-                    throw new Error(`Overflow_TimeSpanTooLong`);
+                    throw new Error(SR.Overflow_TimeSpanTooLong);
                 }
                 millis = num * 1;
                 break;
@@ -116,7 +118,7 @@ export class TimeSpan {
 
     public Duration(): TimeSpan {
         if (this._millis === TimeSpan.MinValue._millis) {
-            throw new Error(`Overflow_Duration`);
+            throw new Error(SR.Overflow_Duration);
         }
         return new TimeSpan((this._millis >= 0) ? this._millis : (-this._millis));
     }
@@ -135,7 +137,7 @@ export class TimeSpan {
 
     private static Interval(value: number, scale: number): TimeSpan {
         if (Number.isNaN(value)) {
-            throw new Error(`Arg_CannotBeNaN`);
+            throw new Error(SR.Arg_CannotBeNaN);
         }
         const num = value * scale;
         return new TimeSpan(num);
@@ -151,7 +153,7 @@ export class TimeSpan {
 
     public Negate(): TimeSpan {
         if (this._millis === TimeSpan.MinValue._millis) {
-            throw new Error(`Overflow_NegateTwosCompNum`);
+            throw new Error(SR.Overflow_NegateTwosCompNum);
         }
         return new TimeSpan(-this._millis);
     }
@@ -167,7 +169,7 @@ export class TimeSpan {
 
     public Multiply(factor: number): TimeSpan {
         if (Number.isNaN(factor)) {
-            throw new Error(`"factor" Arg_CannotBeNaN`);
+            throw new Error(`"factor" ${SR.Arg_CannotBeNaN}`);
         }
         const num = Math.round(this._millis * factor);
         return TimeSpan.FromMillis(num);
@@ -175,11 +177,11 @@ export class TimeSpan {
 
     public Divide(divisor: number): TimeSpan {
         if (Number.isNaN(divisor)) {
-            throw new Error(`"divisor" Arg_CannotBeNaN`);
+            throw new Error(`"divisor" ${SR.Arg_CannotBeNaN}`);
         }
         const num = Math.round(this._millis / divisor);
         if (Number.isNaN(num)) {
-            throw new Error(`Overflow_TimeSpanTooLong`);
+            throw new Error(SR.Overflow_TimeSpanTooLong);
         }
         return TimeSpan.FromMillis(num);
     }
@@ -369,7 +371,7 @@ export class DateTime {
                 second = int(args[5]);
                 millisecond = int(args[6]);
                 if (millisecond < 0 || millisecond >= 1000) {
-                    throw new Error(`ArgumentOutOfRange_Range "millisecond: [0, 999]"`);
+                    throw new Error(`${SR.ArgumentOutOfRange_Range} "millisecond: [0, 999]"`);
                 }
                 const num = DateTime.DateToMillis(year, month, day) + DateTime.TimeToMillis(hour, minute, second);
                 millis = num + millisecond * 1;
@@ -386,7 +388,7 @@ export class DateTime {
         // const num = value * scale + ((value >= 0.0) ? 0.5 : (-0.5));
         const num = value * scale;
         if (num <= -315537897600000.0 || num >= 315537897600000.0) {
-            throw new Error(`ArgumentOutOfRange_AddValue "value"`);
+            throw new Error(`${SR.ArgumentOutOfRange_AddValue} "value"`);
         }
         return this.AddMillis(num * 1);
     }
@@ -409,7 +411,7 @@ export class DateTime {
 
     public AddMonths(months: number): DateTime {
         if (months < -120000 || months > 120000) {
-            throw new Error(`ArgumentOutOfRange_DateTimeBadMonths "months"`);
+            throw new Error(`${SR.ArgumentOutOfRange_DateTimeBadMonths} "months"`);
         }
         let { year, month, day } = this.GetDatePart2();
         let num = month - 1 + months;
@@ -422,7 +424,7 @@ export class DateTime {
             year += divide(num - 11, 12);
         }
         if (year < 1 || year > 9999) {
-            throw new Error(`ArgumentOutOfRange_DateArithmetic "months"`);
+            throw new Error(`${SR.ArgumentOutOfRange_DateArithmetic} "months"`);
         }
         let num2 = DateTime.DaysInMonth(year, month);
         if (day > num2) {
@@ -442,7 +444,7 @@ export class DateTime {
 
     public AddYears(value: number): DateTime {
         if (value < -10000 || value > 10000) {
-            throw new Error(`ArgumentOutOfRange_DateTimeBadYears "years"`);
+            throw new Error(`${SR.ArgumentOutOfRange_DateTimeBadYears} "years"`);
         }
         return this.AddMonths(value * 12);
     }
@@ -472,19 +474,19 @@ export class DateTime {
                 return num2 * 86400000;
             }
         }
-        throw new Error(`ArgumentOutOfRange_BadYearMonthDay`);
+        throw new Error(SR.ArgumentOutOfRange_BadYearMonthDay);
     }
 
     private static TimeToMillis(hour: number, minute: number, second: number): number {
         if (hour >= 0 && hour < 24 && minute >= 0 && minute < 60 && second >= 0 && second < 60) {
             return TimeSpan.TimeToMillis(hour, minute, second);
         }
-        throw new Error(`ArgumentOutOfRange_BadHourMinuteSecond`);
+        throw new Error(SR.ArgumentOutOfRange_BadHourMinuteSecond);
     }
 
     public static DaysInMonth(year: number, month: number): number {
         if (month < 1 || month > 12) {
-            throw new Error(`ArgumentOutOfRange_Month "month"`);
+            throw new Error(`${SR.ArgumentOutOfRange_Month} "month"`);
         }
         const array = DateTime.IsLeapYear(year) ? DateTime.s_daysToMonth366 : DateTime.s_daysToMonth365;
         return array[month] - array[month - 1];
@@ -561,7 +563,7 @@ export class DateTime {
 
     public static IsLeapYear(year: number): boolean {
         if (year < 1 || year > 9999) {
-            throw new Error(`ArgumentOutOfRange_Year "year"`);
+            throw new Error(`${SR.ArgumentOutOfRange_Year} "year"`);
         }
         if (year % 4 == 0) {
             if (year % 100 == 0) {
@@ -648,7 +650,7 @@ export class DateTime {
 }
 
 
-export function TestMethod(target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+function TestMethod(target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
     try {
         descriptor.value();
         console.info('%c ✔', 'color: green', `UnitTest '${propertyKey.toString()}' passed!`);
@@ -657,7 +659,7 @@ export function TestMethod(target: any, propertyKey: string | symbol, descriptor
     }
 }
 
-export function AreEqual<T>(expected: T, actual: T) {
+function AreEqual<T>(expected: T, actual: T) {
     let equal = true;
     if (null == expected) {
         if (null != actual && actual !== expected) {
