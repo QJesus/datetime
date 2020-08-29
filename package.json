@@ -1,6 +1,6 @@
 {
   "name": "datetime-dotnet",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "dotnet datetime and timespan implement",
   "main": "datetime.ts",
   "scripts": {
@@ -15,6 +15,7 @@
     "datetime",
     "timespan"
   ],
+  "types": "datetime.d.ts",
   "author": "qjesus",
   "license": "MIT",
   "bugs": {
