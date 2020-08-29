@@ -1,0 +1,24 @@
+{
+  "name": "datetime",
+  "version": "1.0.0",
+  "description": "dotnet datetime and timespan implement",
+  "main": "datetime.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QJesus/datetime.git"
+  },
+  "keywords": [
+    "dotnet",
+    "datetime",
+    "timespan"
+  ],
+  "author": "qjesus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/QJesus/datetime/issues"
+  },
+  "homepage": "https://github.com/QJesus/datetime#readme"
+}
