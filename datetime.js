@@ -1,66 +1,21 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 export class TimeSpan {
-    public static readonly Zero = new TimeSpan(0);
-    public static readonly MaxValue = new TimeSpan(Number.MAX_SAFE_INTEGER);
-    public static readonly MinValue = new TimeSpan(Number.MIN_SAFE_INTEGER);
-    private readonly _millis: number;
-
-    public get Days() {
-        return divide(this._millis, 86400000);
-    }
-
-    public get Hours() {
-        return divide(this._millis, 3600000) % 24;
-    }
-
-    public get Milliseconds() {
-        return divide(this._millis, 1) % 1000;
-    }
-
-    public get Minutes() {
-        return divide(this._millis, 60000) % 60;
-    }
-
-    public get Seconds() {
-        return divide(this._millis, 1000) % 60;
-    }
-
-    public get TotalDays() {
-        return this._millis / 86400000.0;
-    }
-
-    public get TotalHours() {
-        return this._millis / 3600000.0;
-    }
-
-    public get TotalMilliseconds() {
-        const num = this._millis;
-        if (num > Number.MAX_SAFE_INTEGER) {
-            return Number.MAX_SAFE_INTEGER;
-        }
-        if (num < Number.MIN_SAFE_INTEGER) {
-            return Number.MIN_SAFE_INTEGER;
-        }
-        return num;
-    }
-
-    public get TotalMinutes() {
-        return this._millis / 60000.0;
-    }
-
-    public get TotalSeconds() {
-        return this._millis / 1000.0;
-    }
-
-    constructor(...args: number[]) {
+    constructor(...args) {
         let millis = 0;
-        let days: number;
-        let hours: number;
-        let minutes: number;
-        let seconds: number;
-        let milliseconds: number;
-
+        let days;
+        let hours;
+        let minutes;
+        let seconds;
+        let milliseconds;
         switch ((args || []).length) {
-            case 1: millis = int(args[0]); break;
+            case 1:
+                millis = int(args[0]);
+                break;
             case 3:
                 hours = int(args[0]);
                 minutes = int(args[1]);
@@ -83,13 +38,48 @@ export class TimeSpan {
         }
         this._millis = millis;
     }
-
-    public Add(ts: TimeSpan): TimeSpan {
+    get Days() {
+        return divide(this._millis, 86400000);
+    }
+    get Hours() {
+        return divide(this._millis, 3600000) % 24;
+    }
+    get Milliseconds() {
+        return divide(this._millis, 1) % 1000;
+    }
+    get Minutes() {
+        return divide(this._millis, 60000) % 60;
+    }
+    get Seconds() {
+        return divide(this._millis, 1000) % 60;
+    }
+    get TotalDays() {
+        return this._millis / 86400000.0;
+    }
+    get TotalHours() {
+        return this._millis / 3600000.0;
+    }
+    get TotalMilliseconds() {
+        const num = this._millis;
+        if (num > Number.MAX_SAFE_INTEGER) {
+            return Number.MAX_SAFE_INTEGER;
+        }
+        if (num < Number.MIN_SAFE_INTEGER) {
+            return Number.MIN_SAFE_INTEGER;
+        }
+        return num;
+    }
+    get TotalMinutes() {
+        return this._millis / 60000.0;
+    }
+    get TotalSeconds() {
+        return this._millis / 1000.0;
+    }
+    Add(ts) {
         const num = this._millis + ts._millis;
         return new TimeSpan(num);
     }
-
-    public static Compare(t1: TimeSpan, t2: TimeSpan): number {
+    static Compare(t1, t2) {
         if (t1._millis > t2._millis) {
             return 1;
         }
@@ -98,8 +88,7 @@ export class TimeSpan {
         }
         return 0;
     }
-
-    public CompareTo(value: TimeSpan): number {
+    CompareTo(value) {
         const millis = value._millis;
         if (this._millis > millis) {
             return 1;
@@ -109,71 +98,58 @@ export class TimeSpan {
         }
         return 0;
     }
-
-    public static FromDays(value: number): TimeSpan {
+    static FromDays(value) {
         return TimeSpan.Interval(value, 864000000000.0);
     }
-
-    public Duration(): TimeSpan {
+    Duration() {
         if (this._millis === TimeSpan.MinValue._millis) {
             throw new Error(`Overflow_Duration`);
         }
         return new TimeSpan((this._millis >= 0) ? this._millis : (-this._millis));
     }
-
-    public Equals(obj: TimeSpan): boolean {
+    Equals(obj) {
         return this._millis === obj._millis;
     }
-
-    public GetHashCode(): number {
+    GetHashCode() {
         return int(this._millis) ^ int(this._millis >> 32);
     }
-
-    public static FromHours(value: number): TimeSpan {
+    static FromHours(value) {
         return TimeSpan.Interval(value, 3600000.0);
     }
-
-    private static Interval(value: number, scale: number): TimeSpan {
+    static Interval(value, scale) {
         if (Number.isNaN(value)) {
             throw new Error(`Arg_CannotBeNaN`);
         }
         const num = value * scale;
         return new TimeSpan(num);
     }
-
-    public static FromMilliseconds(value: number): TimeSpan {
+    static FromMilliseconds(value) {
         return TimeSpan.Interval(value, 10000.0);
     }
-
-    public static FromMinutes(value: number): TimeSpan {
+    static FromMinutes(value) {
         return TimeSpan.Interval(value, 600000000.0);
     }
-
-    public Negate(): TimeSpan {
+    Negate() {
         if (this._millis === TimeSpan.MinValue._millis) {
             throw new Error(`Overflow_NegateTwosCompNum`);
         }
         return new TimeSpan(-this._millis);
     }
-
-    public static FromSeconds(value: number): TimeSpan {
+    static FromSeconds(value) {
         return TimeSpan.Interval(value, 1000.0);
     }
-
-    public Subtract(ts: TimeSpan): TimeSpan {
+    Subtract(ts) {
         const num = this._millis - ts._millis;
         return new TimeSpan(num);
     }
-
-    public Multiply(factor: number): TimeSpan {
+    Multiply(factor) {
         if (Number.isNaN(factor)) {
             throw new Error(`"factor" Arg_CannotBeNaN`);
         }
         const num = Math.round(this._millis * factor);
         return TimeSpan.FromMillis(num);
     }
-
-    public Divide(divisor: number): TimeSpan {
+    Divide(divisor) {
         if (Number.isNaN(divisor)) {
             throw new Error(`"divisor" Arg_CannotBeNaN`);
         }
@@ -183,24 +159,20 @@ export class TimeSpan {
         }
         return TimeSpan.FromMillis(num);
     }
-
-    public static FromMillis(value: number): TimeSpan {
+    static FromMillis(value) {
         return new TimeSpan(value);
     }
-
-    public static TimeToMillis(hour: number, minute: number, second: number): number {
+    static TimeToMillis(hour, minute, second) {
         const num = hour * 3600 + minute * 60 + second;
         return num * 1000;
     }
-
-    public ToString(format: 'c' | 'g' | 'G' = 'c', culture: 'en' | 'cn' = 'en'): string {
+    ToString(format = 'c', culture = 'en') {
         const days = Math.abs(this.Days);
         const hours = Math.abs(this.Hours);
         const minutes = Math.abs(this.Minutes);
         const seconds = Math.abs(this.Seconds);
         const milliseconds = Math.abs(this.Milliseconds);
-
-        const dest = new Array<string>();
+        const dest = new Array();
         if (this.TotalMilliseconds < 0) {
             dest.push('-');
         }
@@ -210,32 +182,29 @@ export class TimeSpan {
         }
         if (format !== 'g') {
             dest.push(hours.toString().padStart(2, '0'));
-        } else {
+        }
+        else {
             dest.push(hours.toString());
         }
         dest.push(culture === 'cn' ? '时' : ':');
-
         dest.push(minutes.toString().padStart(2, '0'));
         dest.push(culture === 'cn' ? '分' : ':');
-
         dest.push(seconds.toString().padStart(2, '0'));
         dest.push(culture === 'cn' ? '秒' : '');
-
         if (milliseconds !== 0) {
             if (culture === 'cn') {
                 dest.push(milliseconds.toString().padStart(3, '0'));
                 dest.push('毫秒');
-            } else {
+            }
+            else {
                 dest.push('.');
                 dest.push(milliseconds.toString().padStart(3, '0'));
             }
         }
         return dest.join('');
     }
-
-    @TestMethod
-    public Test_TimeSpan_format_10s() {
-        const format_10s = (max: number, min: number) => {
+    Test_TimeSpan_format_10s() {
+        const format_10s = (max, min) => {
             let span = new TimeSpan(max - min);
             if (Math.abs(span.TotalMilliseconds) > new TimeSpan(0, 0, 0, 10).TotalMilliseconds) {
                 span = new TimeSpan(0, 0, 0, 0, span.TotalMilliseconds - span.Milliseconds);
@@ -246,101 +215,40 @@ export class TimeSpan {
         AreEqual('00时00分22秒', format_10s(1593546359541, 1593546337366));
         AreEqual('00时00分09秒202毫秒', format_10s(1593546354745, 1593546345543));
     }
-
-    @TestMethod
-    public Test_TimeSpan_ctor() {
-        AreEqual(15 * 24 * 3600 * 1000, new TimeSpan(15, 0, 0, 0).TotalMilliseconds);//15days
+    Test_TimeSpan_ctor() {
+        AreEqual(15 * 24 * 3600 * 1000, new TimeSpan(15, 0, 0, 0).TotalMilliseconds); //15days
         AreEqual(10 * 1000, new TimeSpan(0, 0, 10).TotalMilliseconds); //10s
     }
 }
-
-export enum DayOfWeek {
-    Sunday,
-    Monday,
-    Tuesday,
-    Wednesday,
-    Thursday,
-    Friday,
-    Saturday
-}
-
+TimeSpan.Zero = new TimeSpan(0);
+TimeSpan.MaxValue = new TimeSpan(Number.MAX_SAFE_INTEGER);
+TimeSpan.MinValue = new TimeSpan(Number.MIN_SAFE_INTEGER);
+__decorate([
+    TestMethod
+], TimeSpan.prototype, "Test_TimeSpan_format_10s", null);
+__decorate([
+    TestMethod
+], TimeSpan.prototype, "Test_TimeSpan_ctor", null);
+export var DayOfWeek;
+(function (DayOfWeek) {
+    DayOfWeek[DayOfWeek["Sunday"] = 0] = "Sunday";
+    DayOfWeek[DayOfWeek["Monday"] = 1] = "Monday";
+    DayOfWeek[DayOfWeek["Tuesday"] = 2] = "Tuesday";
+    DayOfWeek[DayOfWeek["Wednesday"] = 3] = "Wednesday";
+    DayOfWeek[DayOfWeek["Thursday"] = 4] = "Thursday";
+    DayOfWeek[DayOfWeek["Friday"] = 5] = "Friday";
+    DayOfWeek[DayOfWeek["Saturday"] = 6] = "Saturday";
+})(DayOfWeek || (DayOfWeek = {}));
 export class DateTime {
-    private static readonly s_daysToMonth365 = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
-    private static readonly s_daysToMonth366 = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366];
-
-    public static readonly MinValue = new DateTime(0);
-    public static readonly MaxValue = new DateTime(Number.MAX_SAFE_INTEGER);
-    public static readonly UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-
-    private readonly _millis: number;
-
-    public get Date(): DateTime {
-        return new DateTime(this.Year, this.Month, this.Day);
-    }
-
-    public get Day(): number {
-        return this.GetDatePart(3);
-    }
-
-    public get DayOfWeek(): DayOfWeek {
-        return (divide(this._millis, 86400000) + 1) % 7;
-    }
-
-    public get DayOfYear(): number {
-        return this.GetDatePart(1);
-    }
-
-    public get Hour(): number {
-        return this.TimeOfDay.Hours;
-    }
-
-    public get Millisecond(): number {
-        return this._millis % 1000;
-    }
-
-    public get Minute(): number {
-        return this.TimeOfDay.Minutes;
-    }
-
-    public get Month(): number {
-        return this.GetDatePart(2);
-    }
-
-    public static get Now(): DateTime {
-        return DateTime.FromJavaScriptDate(new Date());
-    }
-
-    public get Second(): number {
-        return this.TimeOfDay.Seconds;
-    }
-
-    public get TimeOfDay(): TimeSpan {
-        return new TimeSpan(this._millis - this.Date._millis);
-    }
-
-    public static get Today(): DateTime {
-        return DateTime.Now.Date;
-    }
-
-    public get Year(): number {
-        return this.GetDatePart(0);
-    }
-
-    public static get UtcNow(): DateTime {
-        const d = new Date();
-        return new DateTime(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds());
-    }
-
-    constructor(...args: number[]) {
+    constructor(...args) {
         let millis = 0;
-        let year: number;
-        let month: number;
-        let day: number;
-        let hour: number;
-        let minute: number;
-        let second: number;
-        let millisecond: number;
-
+        let year;
+        let month;
+        let day;
+        let hour;
+        let minute;
+        let second;
+        let millisecond;
         switch ((args || []).length) {
             case 1:
                 millis = int(args[0]);
@@ -377,12 +285,53 @@ export class DateTime {
         }
         this._millis = millis;
     }
-
-    public Add(value: TimeSpan): DateTime {
+    get Date() {
+        return new DateTime(this.Year, this.Month, this.Day);
+    }
+    get Day() {
+        return this.GetDatePart(3);
+    }
+    get DayOfWeek() {
+        return (divide(this._millis, 86400000) + 1) % 7;
+    }
+    get DayOfYear() {
+        return this.GetDatePart(1);
+    }
+    get Hour() {
+        return this.TimeOfDay.Hours;
+    }
+    get Millisecond() {
+        return this._millis % 1000;
+    }
+    get Minute() {
+        return this.TimeOfDay.Minutes;
+    }
+    get Month() {
+        return this.GetDatePart(2);
+    }
+    static get Now() {
+        return DateTime.FromJavaScriptDate(new Date());
+    }
+    get Second() {
+        return this.TimeOfDay.Seconds;
+    }
+    get TimeOfDay() {
+        return new TimeSpan(this._millis - this.Date._millis);
+    }
+    static get Today() {
+        return DateTime.Now.Date;
+    }
+    get Year() {
+        return this.GetDatePart(0);
+    }
+    static get UtcNow() {
+        const d = new Date();
+        return new DateTime(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(), d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), d.getUTCMilliseconds());
+    }
+    Add(value) {
         return this.AddMillis(value.TotalMilliseconds);
     }
-
-    private add(value: number, scale: number): DateTime {
+    add(value, scale) {
         // const num = value * scale + ((value >= 0.0) ? 0.5 : (-0.5));
         const num = value * scale;
         if (num <= -315537897600000.0 || num >= 315537897600000.0) {
@@ -390,24 +339,19 @@ export class DateTime {
         }
         return this.AddMillis(num * 1);
     }
-
-    public AddDays(value: number): DateTime {
+    AddDays(value) {
         return this.add(value, 86400000);
     }
-
-    public AddHours(value: number): DateTime {
+    AddHours(value) {
         return this.add(value, 3600000);
     }
-
-    public AddMilliseconds(value: number): DateTime {
+    AddMilliseconds(value) {
         return this.add(value, 1);
     }
-
-    public AddMinutes(value: number): DateTime {
+    AddMinutes(value) {
         return this.add(value, 60000);
     }
-
-    public AddMonths(months: number): DateTime {
+    AddMonths(months) {
         if (months < -120000 || months > 120000) {
             throw new Error(`ArgumentOutOfRange_DateTimeBadMonths "months"`);
         }
@@ -430,24 +374,20 @@ export class DateTime {
         }
         return new DateTime(int(DateTime.DateToMillis(year, month, day) + this._millis % 86400000));
     }
-
-    public AddSeconds(value: number): DateTime {
+    AddSeconds(value) {
         return this.add(value, 1000);
     }
-
-    public AddMillis(value: number): DateTime {
+    AddMillis(value) {
         const internalMillis = this._millis;
         return new DateTime(int(internalMillis + value));
     }
-
-    public AddYears(value: number): DateTime {
+    AddYears(value) {
         if (value < -10000 || value > 10000) {
             throw new Error(`ArgumentOutOfRange_DateTimeBadYears "years"`);
         }
         return this.AddMonths(value * 12);
     }
-
-    public static Compare(t1: DateTime, t2: DateTime): number {
+    static Compare(t1, t2) {
         const internalMillis = t1._millis;
         const internalMillis2 = t2._millis;
         if (internalMillis > internalMillis2) {
@@ -458,12 +398,10 @@ export class DateTime {
         }
         return 0;
     }
-
-    public CompareTo(value: DateTime): number {
+    CompareTo(value) {
         return DateTime.Compare(this, value);
     }
-
-    private static DateToMillis(year: number, month: number, day: number): number {
+    static DateToMillis(year, month, day) {
         if (year >= 1 && year <= 9999 && month >= 1 && month <= 12) {
             const array = DateTime.IsLeapYear(year) ? DateTime.s_daysToMonth366 : DateTime.s_daysToMonth365;
             if (day >= 1 && day <= array[month] - array[month - 1]) {
@@ -474,27 +412,23 @@ export class DateTime {
         }
         throw new Error(`ArgumentOutOfRange_BadYearMonthDay`);
     }
-
-    private static TimeToMillis(hour: number, minute: number, second: number): number {
+    static TimeToMillis(hour, minute, second) {
         if (hour >= 0 && hour < 24 && minute >= 0 && minute < 60 && second >= 0 && second < 60) {
             return TimeSpan.TimeToMillis(hour, minute, second);
         }
         throw new Error(`ArgumentOutOfRange_BadHourMinuteSecond`);
     }
-
-    public static DaysInMonth(year: number, month: number): number {
+    static DaysInMonth(year, month) {
         if (month < 1 || month > 12) {
             throw new Error(`ArgumentOutOfRange_Month "month"`);
         }
         const array = DateTime.IsLeapYear(year) ? DateTime.s_daysToMonth366 : DateTime.s_daysToMonth365;
         return array[month] - array[month - 1];
     }
-
-    public Equals(value: DateTime): boolean {
+    Equals(value) {
         return this._millis == value._millis;
     }
-
-    private GetDatePart(part: number): number {
+    GetDatePart(part) {
         const internalMillis = this._millis;
         let num = divide(internalMillis, 86400000);
         let num2 = divide(num, 146097);
@@ -518,7 +452,7 @@ export class DateTime {
             return num + 1;
         }
         const array = (num5 == 3 && (num4 != 24 || num3 == 3)) ? DateTime.s_daysToMonth366 : DateTime.s_daysToMonth365;
-        let i: number;
+        let i;
         for (i = (num >> 5) + 1; num >= array[i]; i++) {
         }
         if (part == 2) {
@@ -526,8 +460,7 @@ export class DateTime {
         }
         return num - array[i - 1] + 1;
     }
-
-    private GetDatePart2(): { year: number; month: number; day: number } {
+    GetDatePart2() {
         const internalMillis = this._millis;
         let num = divide(internalMillis, 86400000);
         let num2 = divide(num, 146097);
@@ -546,20 +479,18 @@ export class DateTime {
         let year = num2 * 400 + num3 * 100 + num4 * 4 + num5 + 1;
         num -= num5 * 365;
         const array = (num5 == 3 && (num4 != 24 || num3 == 3)) ? DateTime.s_daysToMonth366 : DateTime.s_daysToMonth365;
-        let i: number;
+        let i;
         for (i = (num >> 5) + 1; num >= array[i]; i++) {
         }
         let month = i;
         let day = num - array[i - 1] + 1;
         return { year, month, day };
     }
-
-    public GetHashCode(): number {
+    GetHashCode() {
         const internalMillis = this._millis;
         return int(internalMillis) ^ int(internalMillis >> 32);
     }
-
-    public static IsLeapYear(year: number): boolean {
+    static IsLeapYear(year) {
         if (year < 1 || year > 9999) {
             throw new Error(`ArgumentOutOfRange_Year "year"`);
         }
@@ -571,12 +502,10 @@ export class DateTime {
         }
         return false;
     }
-
-    public Subtract(value: DateTime): TimeSpan {
+    Subtract(value) {
         return new TimeSpan(this._millis - value._millis);
     }
-
-    public ToString(format = 'yyyy-MM-dd HH:mm:ss'): string {
+    ToString(format = 'yyyy-MM-dd HH:mm:ss') {
         const data = new Array();
         data['yyyy'] = this.Year.toString().padStart(4, '0');
         data['MM'] = this.Month.toString().padStart(2, '0');
@@ -590,48 +519,37 @@ export class DateTime {
         data['ss'] = this.Second.toString().padStart(2, '0');
         data['s'] = this.Second.toString();
         data['fff'] = this.Millisecond.toString().padStart(3, '0');
-        data['ff'] = (<string>data['fff']).substr(0, 2);
+        data['ff'] = data['fff'].substr(0, 2);
         let output = '';
         const parts = format.split(/(yyyy|MM|M|dd|d|HH|H|mm|m|ss|s|fff|ff)?/);
         for (let index = 0; index < parts.length; index++) {
             const item = parts[index];
             output += data[item] != null ? data[item] : item;
         }
-
         return output;
     }
-
-    public static FromJavaScripTimestamp(timestamp: number): DateTime {
+    static FromJavaScripTimestamp(timestamp) {
         return DateTime.FromJavaScriptDate(new Date(timestamp));
     }
-
-    public static FromJavaScriptDate(date: Date): DateTime {
+    static FromJavaScriptDate(date) {
         const d = date;
         return new DateTime(d.getFullYear(), d.getMonth() + 1, d.getDate(), d.getHours(), d.getMinutes(), d.getSeconds(), d.getMilliseconds());
     }
-
-    public ToJavaScriptTimestamp(): number {
+    ToJavaScriptTimestamp() {
         return this.ToJavaScriptDate().valueOf();
     }
-
-    public ToJavaScriptDate(): Date {
+    ToJavaScriptDate() {
         return new Date(this.ToString('yyyy-MM-dd HH:mm:ss.fff'));
     }
-
-
-    @TestMethod
-    public Test_DateTime_AddMilliseconds() {
+    Test_DateTime_AddMilliseconds() {
         let min1 = new DateTime(2020, 7, 1);
         let max1 = new DateTime(2020, 7, 2);
         let span = max1.Subtract(min1);
-
         AreEqual('2020-06-30 00:00:00', min1.AddMilliseconds(-span.TotalMilliseconds).ToString());
         AreEqual('1.00:00:00', span.ToString());
         AreEqual('2020-07-01 00:00:00', min1.ToString());
     }
-
-    @TestMethod
-    public Test_DateTime_Divide() {
+    Test_DateTime_Divide() {
         let min1 = new DateTime(2020, 7, 1);
         let max1 = new DateTime(2020, 7, 2);
         let span = max1.Subtract(min1);
@@ -646,37 +564,45 @@ export class DateTime {
         AreEqual('01:50:46.154', span.Divide(13).ToString());
     }
 }
-
-
-export function TestMethod(target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+DateTime.s_daysToMonth365 = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
+DateTime.s_daysToMonth366 = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366];
+DateTime.MinValue = new DateTime(0);
+DateTime.MaxValue = new DateTime(Number.MAX_SAFE_INTEGER);
+DateTime.UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+__decorate([
+    TestMethod
+], DateTime.prototype, "Test_DateTime_AddMilliseconds", null);
+__decorate([
+    TestMethod
+], DateTime.prototype, "Test_DateTime_Divide", null);
+export function TestMethod(target, propertyKey, descriptor) {
     try {
         descriptor.value();
         console.info('%c ✔', 'color: green', `UnitTest '${propertyKey.toString()}' passed!`);
-    } catch (ex) {
+    }
+    catch (ex) {
         console.error('%c ❌', 'color: red', `UnitTest '${propertyKey.toString()}' faild!`, '\n', ex);
     }
 }
-
-export function AreEqual<T>(expected: T, actual: T) {
+export function AreEqual(expected, actual) {
     let equal = true;
     if (null == expected) {
         if (null != actual && actual !== expected) {
             equal = false;
         }
-    } else if (expected !== actual) {
+    }
+    else if (expected !== actual) {
         equal = false;
     }
-
     if (!equal) {
         throw new Error('expected = ' + expected + ', ' + 'actual = ' + actual);
     }
-};
-
-export function divide(value: number, factor: number) {
+}
+;
+export function divide(value, factor) {
     return int(+value / +factor);
 }
-
-export function int(value: number) {
+export function int(value) {
     return +value >= 0 ? Math.floor(+value) : Math.ceil(+value);
 }
 window['DateTime'] = DateTime;

@@ -2,7 +2,7 @@
   "name": "datetime-dotnet",
   "version": "1.0.2",
   "description": "dotnet datetime and timespan implement",
-  "main": "datetime.ts",
+  "main": "datetime.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

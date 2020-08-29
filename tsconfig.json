@@ -1,8 +1,13 @@
 {
     "compilerOptions": {
+        "experimentalDecorators": true,
         "module": "commonjs",
-        "target": "es2020",
-        "jsx": "preserve",
+        "target": "es2016",
+        "lib": [
+            "es2017",
+            "dom",
+            "scripthost"
+        ],
         "sourceMap": true
     },
     "exclude": [
