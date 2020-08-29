@@ -1,5 +1,5 @@
 {
-  "name": "datetime",
+  "name": "datetime-dotnet",
   "version": "1.0.0",
   "description": "dotnet datetime and timespan implement",
   "main": "datetime.ts",
@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/QJesus/datetime/issues"
   },
-  "homepage": "https://github.com/QJesus/datetime#readme"
+  "homepage": "https://github.com/QJesus/datetime#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  }
 }
