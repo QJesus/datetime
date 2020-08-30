@@ -1,6 +1,6 @@
 {
   "name": "datetime-dotnet",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "dotnet datetime and timespan implement",
   "main": "datetime.js",
   "scripts": {
@@ -13,7 +13,9 @@
   "keywords": [
     "dotnet",
     "datetime",
-    "timespan"
+    "timespan",
+    "Convert Javascript datetime to C# datetime",
+    "Working with Date and Time in C#"
   ],
   "types": "datetime.d.ts",
   "author": "qjesus",
