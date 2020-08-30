@@ -1,5 +1,4 @@
 export class SR {
-
     public static get Acc_CreateAbstEx() { return SR.GetResourceString("Acc_CreateAbstEx"); }
 
     public static get Acc_CreateArgIterator() { return SR.GetResourceString("Acc_CreateArgIterator"); }
@@ -2099,4 +2098,8 @@ export class SR {
     public static get InvalidOperation_MultipleComUnRegFunctions() { return SR.GetResourceString("InvalidOperation_MultipleComUnRegFunctions"); }
 
     public static GetResourceString = (resourceKey: string) => resourceKey;
+
+    public static Format(resourceFormat: string, p1: Object): string {
+        return resourceFormat + p1;
+    }
 }
