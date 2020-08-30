@@ -196,6 +196,8 @@ export class TimeSpan {
         return num * 1000;
     }
 
+    public toString = () => this.ToString();
+
     public ToString(format: 'c' | 'g' | 'G' = 'c', culture: 'en' | 'cn' = 'en'): string {
         const days = Math.abs(this.Days);
         const hours = Math.abs(this.Hours);
@@ -234,26 +236,6 @@ export class TimeSpan {
             }
         }
         return dest.join('');
-    }
-
-    @TestMethod
-    public Test_TimeSpan_format_10s() {
-        const format_10s = (max: number, min: number) => {
-            let span = new TimeSpan(max - min);
-            if (Math.abs(span.TotalMilliseconds) > new TimeSpan(0, 0, 0, 10).TotalMilliseconds) {
-                span = new TimeSpan(0, 0, 0, 0, span.TotalMilliseconds - span.Milliseconds);
-            }
-            return span.ToString('c', 'cn');
-        };
-        AreEqual('1天00时00分00秒', format_10s(1593619200000, 1593532800000));
-        AreEqual('00时00分22秒', format_10s(1593546359541, 1593546337366));
-        AreEqual('00时00分09秒202毫秒', format_10s(1593546354745, 1593546345543));
-    }
-
-    @TestMethod
-    public Test_TimeSpan_ctor() {
-        AreEqual(15 * 24 * 3600 * 1000, new TimeSpan(15, 0, 0, 0).TotalMilliseconds);//15days
-        AreEqual(10 * 1000, new TimeSpan(0, 0, 10).TotalMilliseconds); //10s
     }
 }
 
@@ -588,6 +570,8 @@ export class DateTime {
         return new TimeSpan(this._millis - value._millis);
     }
 
+    public toString = () => this.ToString();
+
     public ToString(format = 'yyyy-MM-dd HH:mm:ss'): string {
         const data = new Array();
         data['yyyy'] = this.Year.toString().padStart(4, '0');
@@ -629,60 +613,7 @@ export class DateTime {
     public ToJavaScriptDate(): Date {
         return new Date(this.ToString('yyyy-MM-dd HH:mm:ss.fff'));
     }
-
-
-    @TestMethod
-    public Test_DateTime_AddMilliseconds() {
-        let min1 = new DateTime(2020, 7, 1);
-        let max1 = new DateTime(2020, 7, 2);
-        let span = max1.Subtract(min1);
-
-        AreEqual('2020-06-30 00:00:00', min1.AddMilliseconds(-span.TotalMilliseconds).ToString());
-        AreEqual('1.00:00:00', span.ToString());
-        AreEqual('2020-07-01 00:00:00', min1.ToString());
-    }
-
-    @TestMethod
-    public Test_DateTime_Divide() {
-        let min1 = new DateTime(2020, 7, 1);
-        let max1 = new DateTime(2020, 7, 2);
-        let span = max1.Subtract(min1);
-        AreEqual('1.00:00:00', span.Divide(1).ToString());
-        AreEqual('12:00:00', span.Divide(2).ToString());
-        AreEqual('08:00:00', span.Divide(3).ToString());
-        AreEqual('06:00:00', span.Divide(4).ToString());
-        AreEqual('04:48:00', span.Divide(5).ToString());
-        AreEqual('03:25:42.857', span.Divide(7).ToString());
-        AreEqual('02:40:00', span.Divide(9).ToString());
-        AreEqual('02:10:54.545', span.Divide(11).ToString());
-        AreEqual('01:50:46.154', span.Divide(13).ToString());
-    }
 }
-
-
-function TestMethod(target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
-    try {
-        descriptor.value();
-        console.info('%c ✔', 'color: green', `UnitTest '${propertyKey.toString()}' passed!`);
-    } catch (ex) {
-        console.error('%c ❌', 'color: red', `UnitTest '${propertyKey.toString()}' faild!`, '\n', ex);
-    }
-}
-
-function AreEqual<T>(expected: T, actual: T) {
-    let equal = true;
-    if (null == expected) {
-        if (null != actual && actual !== expected) {
-            equal = false;
-        }
-    } else if (expected !== actual) {
-        equal = false;
-    }
-
-    if (!equal) {
-        throw new Error('expected = ' + expected + ', ' + 'actual = ' + actual);
-    }
-};
 
 export function divide(value: number, factor: number) {
     return int(+value / +factor);
@@ -691,5 +622,11 @@ export function divide(value: number, factor: number) {
 export function int(value: number) {
     return +value >= 0 ? Math.floor(+value) : Math.ceil(+value);
 }
-window['DateTime'] = DateTime;
-window['TimeSpan'] = TimeSpan;
+
+(() => {
+    if (typeof window == 'undefined') {
+    } else {
+        window['DateTime'] = DateTime;
+        window['TimeSpan'] = TimeSpan;
+    }
+})();
