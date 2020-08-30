@@ -2099,7 +2099,7 @@ export class SR {
 
     public static GetResourceString = (resourceKey: string) => resourceKey;
 
-    public static Format(resourceFormat: string, p1: Object): string {
-        return resourceFormat + p1;
+    public static Format(resourceFormat: string, ...p: Object[]): string {
+        return [resourceFormat, ...(Array.isArray(p) ? p : [p])].join(',');
     }
 }
