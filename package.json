@@ -1,6 +1,6 @@
 {
   "name": "datetime-dotnet",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "dotnet datetime and timespan implement",
   "main": "datetime.js",
   "scripts": {

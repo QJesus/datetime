@@ -253,8 +253,8 @@ export class DateTime {
     private static readonly s_daysToMonth365 = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365];
     private static readonly s_daysToMonth366 = [0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366];
 
-    public static readonly MinValue = new DateTime(0);
-    public static readonly MaxValue = new DateTime(Number.MAX_SAFE_INTEGER);
+    public static readonly MinValue = new DateTime(1, 1, 1, 0, 0, 0, 0);
+    public static readonly MaxValue = new DateTime(9999, 12, 31, 23, 59, 59, 999);
     public static readonly UnixEpoch = new DateTime(1970, 1, 1, 0, 0, 0, 0);
 
     private readonly _millis: number;
@@ -297,6 +297,10 @@ export class DateTime {
 
     public get Second(): number {
         return this.TimeOfDay.Seconds;
+    }
+
+    public get Millis(): number {
+        return this._millis;
     }
 
     public get TimeOfDay(): TimeSpan {

@@ -82,3 +82,18 @@ Console.WriteLine(value.AddMinutes(30));
 Console.WriteLine(value.AddHours(2));
 Console.WriteLine(value.AddMinutes(59));
 Console.WriteLine(value.AddDays(1));
+
+Console.WriteLine(new DateTime(9999, 12, 31, 23, 59, 59, 999).ToString('yyyy-MM-dd HH:mm:ss.fff'));
+Console.WriteLine(DateTime.MaxValue);
+Console.WriteLine(DateTime.MinValue);
+Console.WriteLine(DateTime.UnixEpoch);
+Console.WriteLine(DateTime.MaxValue.Millis);
+Console.WriteLine(DateTime.MinValue.Millis);
+Console.WriteLine(DateTime.UnixEpoch.Millis);
+
+Console.WriteLine(TimeSpan.MaxValue);
+Console.WriteLine(TimeSpan.MinValue);
+Console.WriteLine(TimeSpan.MaxValue.TotalMilliseconds);
+Console.WriteLine(TimeSpan.MinValue.TotalMilliseconds);
+
+Console.WriteLine(new DateTime(315537897600));
