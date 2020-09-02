@@ -1,6 +1,6 @@
 {
   "name": "datetime-dotnet",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "dotnet datetime and timespan implement",
   "main": "datetime.js",
   "scripts": {
@@ -26,5 +26,7 @@
   "homepage": "https://github.com/QJesus/datetime#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
-  }
+  },
+  "dependencies": {},
+  "devDependencies": {}
 }
