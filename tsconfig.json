@@ -2,9 +2,9 @@
     "compilerOptions": {
         "experimentalDecorators": true,
         "module": "commonjs",
-        "target": "es2016",
+        "target": "es5",
         "lib": [
-            "es2017",
+            "es5",
             "dom",
             "scripthost"
         ],

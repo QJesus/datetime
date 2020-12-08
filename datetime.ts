@@ -1,3 +1,6 @@
+/// <reference path="./string.d.ts" />
+/// <reference path="./number.d.ts" />
+
 export class TimeSpan {
     public static readonly Zero = new TimeSpan(0);
     public static readonly MaxValue = new TimeSpan(Number.MAX_SAFE_INTEGER);
