@@ -349,3 +349,7 @@ export class DateTime {
     static FromJavaScripTimestamp(timestamp: number): DateTime;
     static FromJavaScriptDate(date: Date): DateTime;
 }
+
+export function divide(value: number, factor: number): number;
+
+export function int(value: number): number;
