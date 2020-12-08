@@ -653,7 +653,7 @@ var DateTime = /** @class */ (function () {
         return this.ToJavaScriptDate().valueOf();
     };
     DateTime.prototype.ToJavaScriptDate = function () {
-        return new Date(this.ToString('yyyy-MM-dd HH:mm:ss.fff'));
+        return new Date(this.Year, this.Month - 1, this.Day, this.Hour, this.Minute, this.Second, this.Millisecond);
     };
     DateTime.prototype.Test_DateTime_AddMilliseconds = function () {
         var min1 = new DateTime(2020, 7, 1);
